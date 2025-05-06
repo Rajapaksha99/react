@@ -3,15 +3,16 @@ pipeline {
 
   environment {
     // Set server details
-    DEPLOY_SERVER = 'user@52.179.152.199' // Replace with your server's user
-    DEPLOY_DIR = '/path/to/deploy/dir'    // Replace with the directory where you want to deploy on the server
+    DEPLOY_SERVER = 'user@52.179.152.199'  // Replace with your server's user
+    DEPLOY_DIR = '/path/to/deploy/dir'     // Replace with the directory where you want to deploy on the server
+    GIT_REPO = 'https://github.com/Rajapaksha99/react.git'  // Your GitHub repo URL
   }
 
   stages {
     stage('Checkout') {
       steps {
         // Clone the repository from GitHub
-        git 'https://github.com/Rajapaksha99/react.git'
+        git "${GIT_REPO}"
       }
     }
 
@@ -41,14 +42,14 @@ pipeline {
     stage('Deploy') {
       steps {
         script {
-          // Use SCP or rsync to copy the built files to the server
+          // Use SCP to copy the built files to the server
           sh """
             scp -r simple/build/* ${DEPLOY_SERVER}:${DEPLOY_DIR}
           """
           
           // Optionally restart the server if needed (e.g., if using Nginx)
-          // Example: Restart service if needed (adjust according to your setup)
-          // sh "ssh ${DEPLOY_SERVER} 'sudo systemctl restart nginx'"
+          // Restarting Nginx (adjust if using a different service)
+          sh "ssh ${DEPLOY_SERVER} 'sudo systemctl restart nginx'"
           
           echo 'Deployment complete!'
         }
@@ -57,6 +58,9 @@ pipeline {
   }
 
   post {
+    success {
+      echo 'Deployment was successful!'
+    }
     failure {
       echo 'Pipeline failed.'
     }
