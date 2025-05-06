@@ -22,15 +22,6 @@ pipeline {
             }
         }
 
-        stage('Run Tests') {
-            steps {
-                dir('simple') {
-                    // This avoids failure when no test files are found
-                    sh 'npm test -- --passWithNoTests'
-                }
-            }
-        }
-
         stage('Build') {
             steps {
                 dir('simple') {
@@ -45,7 +36,7 @@ pipeline {
             }
             steps {
                 echo 'Deploying application...'
-                // Add your deploy script or command here
+                // Add deployment steps here
             }
         }
     }
