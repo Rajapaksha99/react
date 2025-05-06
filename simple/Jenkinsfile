@@ -2,37 +2,38 @@ pipeline {
   agent any
 
   tools {
-    nodejs 'nodejs' // Same name as in Global Tool Configuration
-  }
-
-  environment {
-    GIT_CREDENTIALS = credentials('github-token')  // Update this to match your credentials ID
+    nodejs 'nodejs'
   }
 
   stages {
     stage('Clone Code') {
       steps {
-        git credentialsId: 'github-token', url: 'https://github.com/Rajapaksha99/react.git' // Update credentialsId
+        git credentialsId: 'github-token', url: 'https://github.com/Rajapaksha99/react.git'
       }
     }
 
     stage('Install Dependencies') {
       steps {
-        sh 'npm install'
+        dir('..') {
+          sh 'npm install'
+        }
       }
     }
 
     stage('Build React App') {
       steps {
-        sh 'npm run build'
+        dir('..') {
+          sh 'npm run build'
+        }
       }
     }
 
     stage('Deploy') {
       steps {
-        // Copy build to server directory (e.g., Nginx root)
-        sh 'rm -rf /var/www/html/*'
-        sh 'cp -r build/* /var/www/html/'
+        dir('..') {
+          sh 'rm -rf /var/www/html/*'
+          sh 'cp -r build/* /var/www/html/'
+        }
       }
     }
   }
