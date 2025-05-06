@@ -49,4 +49,14 @@ pipeline {
             echo 'Pipeline failed.'
         }
     }
+
+    stage('Build') {
+    steps {
+        dir('simple') {
+            sh 'npm install vite --save-dev'
+            sh 'npm run build'
+        }
+    }
+}
+
 }
