@@ -1,56 +1,45 @@
 pipeline {
     agent any
-    environment {
-        GITHUB_TOKEN = credentials('github-token')
-    }
+
     stages {
-        stage('Clone Code') {
+        stage('Checkout') {
             steps {
-                git credentialsId: 'github-token', url: 'https://github.com/Rajapaksha99/react.git', branch: 'master'
+                checkout scm
             }
         }
+
         stage('Install Dependencies') {
             steps {
-                script {
-                    echo 'Navigating to simple folder and installing dependencies...'
-                    dir('simple') {  // Navigate to the folder where package.json is located
-                        sh 'npm install'
-                    }
+                withEnv(["PATH+NODE=/usr/local/bin"]) {
+                    // Verify node and npm versions
+                    sh 'node -v'
+                    sh 'npm -v'
+                    
+                    // Install dependencies
+                    sh 'npm install'
                 }
             }
         }
+
         stage('Run Tests') {
             steps {
-                script {
-                    echo 'Running tests...'
-                    dir('simple') {  // Run tests in the correct folder
-                        sh 'npm test'
-                    }
-                }
+                // Run your tests here
+                sh 'npm test'
             }
         }
+
         stage('Build') {
             steps {
-                script {
-                    echo 'Building the project...'
-                    dir('simple') {  // Build the project in the correct folder
-                        sh 'npm run build'
-                    }
-                }
+                // Build your project here
+                sh 'npm run build'
             }
         }
+
         stage('Deploy') {
             steps {
-                script {
-                    echo 'Deploying the application...'
-                    // Add your deployment steps here
-                }
+                // Deploy your application here
+                sh 'npm run deploy'
             }
-        }
-    }
-    post {
-        always {
-            echo 'Pipeline finished.'
         }
     }
 }
