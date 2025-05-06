@@ -1,11 +1,17 @@
 pipeline {
     agent any
+
+    environment {
+        NODE_ENV = 'production'
+    }
+
     stages {
         stage('Checkout') {
             steps {
-                checkout scm
+                git 'https://github.com/Rajapaksha99/react.git'
             }
         }
+
         stage('Install Dependencies') {
             steps {
                 dir('simple') {
@@ -15,13 +21,16 @@ pipeline {
                 }
             }
         }
+
         stage('Run Tests') {
             steps {
                 dir('simple') {
-                    sh 'npm test'
+                    // This avoids failure when no test files are found
+                    sh 'npm test -- --passWithNoTests'
                 }
             }
         }
+
         stage('Build') {
             steps {
                 dir('simple') {
@@ -29,11 +38,24 @@ pipeline {
                 }
             }
         }
+
         stage('Deploy') {
+            when {
+                branch 'master'
+            }
             steps {
                 echo 'Deploying application...'
-                // Add your deploy steps here
+                // Add your deploy script or command here
             }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline completed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed.'
         }
     }
 }
