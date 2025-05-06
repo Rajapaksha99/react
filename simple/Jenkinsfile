@@ -1,0 +1,35 @@
+pipeline {
+  agent any
+
+  tools {
+    nodejs 'nodejs' // same name as in Global Tool Configuration
+  }
+
+  stages {
+    stage('Clone Code') {
+      steps {
+        git 'https://github.com/yourusername/your-repo.git'
+      }
+    }
+
+    stage('Install Dependencies') {
+      steps {
+        sh 'npm install'
+      }
+    }
+
+    stage('Build React App') {
+      steps {
+        sh 'npm run build'
+      }
+    }
+
+    stage('Deploy') {
+      steps {
+        // Copy build to server directory (e.g., Nginx root)
+        sh 'rm -rf /var/www/html/*'
+        sh 'cp -r build/* /var/www/html/'
+      }
+    }
+  }
+}
