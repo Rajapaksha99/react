@@ -6,14 +6,16 @@ pipeline {
     stages {
         stage('Clone Code') {
             steps {
-                git credentialsId: 'github-token', url: 'https://github.com/Rajapaksha99/react.git', branch: 'master'  // Change 'main' to 'master'
+                git credentialsId: 'github-token', url: 'https://github.com/Rajapaksha99/react.git', branch: 'master'
             }
         }
         stage('Install Dependencies') {
             steps {
                 script {
-                    echo 'Installing dependencies...'
-                    sh 'npm install'
+                    echo 'Navigating to simple folder and installing dependencies...'
+                    dir('simple') {  // Navigate to the folder where package.json is located
+                        sh 'npm install'
+                    }
                 }
             }
         }
@@ -21,7 +23,9 @@ pipeline {
             steps {
                 script {
                     echo 'Running tests...'
-                    sh 'npm test'
+                    dir('simple') {  // Run tests in the correct folder
+                        sh 'npm test'
+                    }
                 }
             }
         }
@@ -29,7 +33,9 @@ pipeline {
             steps {
                 script {
                     echo 'Building the project...'
-                    sh 'npm run build'
+                    dir('simple') {  // Build the project in the correct folder
+                        sh 'npm run build'
+                    }
                 }
             }
         }
