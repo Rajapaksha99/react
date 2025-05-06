@@ -2,13 +2,17 @@ pipeline {
   agent any
 
   tools {
-    nodejs 'nodejs' // same name as in Global Tool Configuration
+    nodejs 'nodejs' // Same name as in Global Tool Configuration
+  }
+
+  environment {
+    GIT_CREDENTIALS = credentials('github-credentials') // Refer to your credentials ID
   }
 
   stages {
     stage('Clone Code') {
       steps {
-        git 'https://github.com/yourusername/your-repo.git'
+        git credentialsId: 'github-credentials', url: 'https://github.com/Rajapaksha99/react.git'  // Use the credentials for cloning
       }
     }
 
