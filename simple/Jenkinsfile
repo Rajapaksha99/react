@@ -6,13 +6,13 @@ pipeline {
   }
 
   environment {
-    GIT_CREDENTIALS = credentials('github-credentials') // Refer to your credentials ID
+    GIT_CREDENTIALS = credentials('github-token')  // Update this to match your credentials ID
   }
 
   stages {
     stage('Clone Code') {
       steps {
-        git credentialsId: 'github-credentials', url: 'https://github.com/Rajapaksha99/react.git'  // Use the credentials for cloning
+        git credentialsId: 'github-token', url: 'https://github.com/Rajapaksha99/react.git' // Update credentialsId
       }
     }
 
