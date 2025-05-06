@@ -17,9 +17,9 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 script {
-                    // Install dependencies (e.g., for a Node.js project)
+                    // Install dependencies using npm
                     echo 'Installing dependencies...'
-                    sh 'npm install'  // Replace with your project's install command
+                    sh 'npm install'  // Run npm install directly
                 }
             }
         }
@@ -27,9 +27,9 @@ pipeline {
         stage('Run Tests') {
             steps {
                 script {
-                    // Run tests (e.g., for a Node.js/React project)
+                    // Run tests (modify the command if you use a testing framework)
                     echo 'Running tests...'
-                    sh 'npm test'  // Replace with your project's test command
+                    sh 'npm test'  // Replace with your test command if needed
                 }
             }
         }
@@ -37,7 +37,7 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    // Build your project (e.g., React build)
+                    // Build the React project
                     echo 'Building the project...'
                     sh 'npm run build'  // Replace with your project's build command
                 }
@@ -49,8 +49,7 @@ pipeline {
                 script {
                     // Deploy the app (adjust for your deployment process)
                     echo 'Deploying the application...'
-                    // Example: Deploy to your server or cloud service
-                    // Replace with your actual deploy command or script
+                    // Add your deployment steps here (e.g., to a cloud service, server, etc.)
                 }
             }
         }
