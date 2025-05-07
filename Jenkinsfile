@@ -2,7 +2,6 @@ pipeline {
   agent any
 
   environment {
-    // Set server details
     DEPLOY_SERVER = 'slt-hosting@52.179.152.199'
     DEPLOY_DIR = '/home/slt-hosting/host/simple/'
     GIT_REPO = 'https://github.com/Rajapaksha99/react.git'
@@ -11,7 +10,8 @@ pipeline {
   stages {
     stage('Checkout') {
       steps {
-        git "${GIT_REPO}"
+        cleanWs()
+        git "${GIT_REP        sh 'ls -la' // debug project structure
       }
     }
 
@@ -36,23 +36,23 @@ pipeline {
 
     stage('Deploy') {
       steps {
-        script {
+        sshagent(credentials: ['slt-host']) {
           sh """
             scp -r simple/dist/* ${DEPLOY_SERVER}:${DEPLOY_DIR}
+            ssh ${DEPLOY_SERVER} 'sudo systemctl restart nginx'
           """
-          sh "ssh ${DEPLOY_SERVER} 'sudo systemctl restart nginx'"
-          echo 'Deployment complete!'
         }
+        echo 'Deployment complete!'
       }
     }
   }
 
   post {
     success {
-      echo 'Deployment was successful!'
+      echo '✅ Deployment was successful!'
     }
     failure {
-      echo 'Pipeline failed.'
+      echo '❌ Pipeline failed.'
     }
   }
 }
