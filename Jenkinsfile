@@ -11,8 +11,8 @@ pipeline {
     stage('Checkout') {
       steps {
         cleanWs()
-        git "${GIT_REPO}"
-        sh 'ls -la' // debug project structure
+        git branch: 'main', url: "${GIT_REPO}"
+        sh 'ls -la'
       }
     }
 
@@ -39,11 +39,11 @@ pipeline {
       steps {
         sshagent(credentials: ['slt-host']) {
           sh """
+            ssh -o StrictHostKeyChecking=no ${DEPLOY_SERVER} 'mkdir -p ${DEPLOY_DIR}'
             scp -r simple/dist/* ${DEPLOY_SERVER}:${DEPLOY_DIR}
             ssh ${DEPLOY_SERVER} 'sudo systemctl restart nginx'
           """
         }
-        echo 'Deployment complete!'
       }
     }
   }
