@@ -36,12 +36,14 @@ pipeline {
     }
 
     stage('Deploy') {
-  sshagent(['slt-hosting']) {
-    sh 'ssh-keyscan -H 52.179.152.199 >> ~/.ssh/known_hosts'
-    sh 'scp -r simple/dist/assets simple/dist/index.html simple/dist/vite.svg slt-hosting@52.179.152.199:/home/slt-hosting/host/simple/'
+      steps {
+        sshagent(['slt-hosting']) {
+          sh 'ssh-keyscan -H 52.179.152.199 >> ~/.ssh/known_hosts'
+          sh 'scp -r simple/dist/assets simple/dist/index.html simple/dist/vite.svg slt-hosting@52.179.152.199:/home/slt-hosting/host/simple/'
+        }
+      }
+    }
   }
-}
-
 
   post {
     success {
