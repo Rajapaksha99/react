@@ -11,7 +11,8 @@ pipeline {
     stage('Checkout') {
       steps {
         cleanWs()
-        git "${GIT_REP        sh 'ls -la' // debug project structure
+        git "${GIT_REPO}"
+        sh 'ls -la' // debug project structure
       }
     }
 
