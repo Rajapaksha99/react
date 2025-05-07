@@ -36,17 +36,12 @@ pipeline {
     }
 
     stage('Deploy') {
-      steps {
-        sshagent(credentials: ['slt-host']) {
-          sh """
-            scp -r simple/dist/* ${DEPLOY_SERVER}:${DEPLOY_DIR}
-            ssh ${DEPLOY_SERVER} 'sudo systemctl restart nginx'
-          """
-        }
-        echo 'Deployment complete!'
-      }
-    }
+  sshagent(['slt-hosting']) {
+    sh 'ssh-keyscan -H 52.179.152.199 >> ~/.ssh/known_hosts'
+    sh 'scp -r simple/dist/assets simple/dist/index.html simple/dist/vite.svg slt-hosting@52.179.152.199:/home/slt-hosting/host/simple/'
   }
+}
+
 
   post {
     success {
